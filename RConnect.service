@@ -1,0 +1,13 @@
+[Unit]
+Description=Reality Connect Server Service
+
+[Service]
+ExecStart=<env_path>/bin/python3.10 run.py
+WorkingDirectory=<code_dir>
+Restart=always
+User=ubuntu
+StandardOutput=append:<code_dir>/system.log
+StandardError=append:<code_dir>/system.log
+
+[Install]
+WantedBy=multi-user.target
