@@ -5,7 +5,7 @@ from sqlalchemy import case, and_
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from server.__main__ import app, cipher, qrc
+from server import app, CIPHER, QRCG
 from server.com.ext.helper import send_response
 from server.com.ext.validation import Authorize, token_required
 from server.com.system.qrcdl import dl_url
@@ -29,10 +29,9 @@ async def create_node(request: Request, uid: str):
     node_detail.node_name = data.get('node_name', 'Default-Node')
     node_detail.created_at = datetime.datetime.utcnow()
     node_detail.expired_at = datetime.datetime.utcnow() + datetime.timedelta(days=int(data.get('expired_at', '10')))
-    qr_data = f"{str(request.base_url)}{str(app.url_path_for('user_authorize', auth=cipher.url_encode(node_detail.node_uid))).lstrip('/')}"
-    print(qr_data)
-    file_md = qrc.generate_qrc(qr_data, node_detail.node_uid)
-    node_detail.node_qrc = cipher.encrypt(file_md)
+    qr_data = f"{str(request.base_url)}{str(app.url_path_for('user_authorize', auth=CIPHER.url_encode(node_detail.node_uid))).lstrip('/')}"
+    file_md = QRCG.generate_qrc(qr_data, node_detail.node_uid)
+    node_detail.node_qrc = CIPHER.encrypt(file_md)
     db.add(node_detail)
     db.commit()
 

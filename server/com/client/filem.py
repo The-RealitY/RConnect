@@ -8,7 +8,7 @@ from PIL import Image
 from fastapi import File, UploadFile, Request
 from sqlalchemy.orm import Session
 
-from server.__main__ import app
+from server import app
 from server.com.ext.helper import send_response, send_file
 from server.model.system import Node
 

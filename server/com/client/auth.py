@@ -3,8 +3,7 @@ import datetime
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from server.__main__ import app, cipher
-
+from server import  CIPHER, app
 from server.com.ext.helper import send_response
 from server.model.user import User
 
@@ -15,7 +14,7 @@ async def user_authorize(request: Request):
     device_id = request.query_params.get('device_id')
 
     db: Session = request.state.db
-    node_uuid = cipher.url_decode(enc_str)
+    node_uuid = CIPHER.url_decode(enc_str)
     user = User()
     user.device_id = device_id
     user.ip_address = f"{request.client.host}:{request.client.port}"

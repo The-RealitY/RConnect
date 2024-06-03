@@ -1,9 +1,9 @@
-from sqlalchemy import Column, INTEGER, VARCHAR, TIMESTAMP, BIGINT
+from sqlalchemy import Column, INTEGER, VARCHAR, TIMESTAMP
 
-from server.__main__ import Base
+from server import MODEL
 
 
-class Ssid(Base):
+class Ssid(MODEL):
     __tablename__ = "ssid"
     id = Column(INTEGER(), autoincrement=True, primary_key=True)
     ssid_uid = Column(VARCHAR(), nullable=False, unique=True)

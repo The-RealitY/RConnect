@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from starlette.requests import Request
 from watchfiles import awatch
 
-from server.__main__ import app, session
+from server import app, SESSION
 from server.com.client.filem import file_baseurl
 from server.com.ext.helper import send_response
 from server.model.system import Node
@@ -16,7 +16,7 @@ from server.model.system import Node
 @app.websocket('/ws/v1/node/watch')
 async def file_connect(websocket: WebSocket):
     node_uid: str = websocket.query_params.get('node_uid')
-    db: Session = session()
+    db: Session = SESSION()
     node_detail = db.query(Node).filter_by(node_uid=node_uid).first()
     if not node_detail or node_detail.node_state != 1 or node_detail.expired_at < datetime.datetime.now():
         return await websocket.close(reason="Event not found or expired!", code=400)
@@ -34,7 +34,7 @@ async def file_connect(websocket: WebSocket):
 @app.get('/api/v1/node/files')
 async def event_files(request: Request):
     node_uid: str = request.query_params.get('node_uid')
-    db: Session = session()
+    db: Session = SESSION()
     node_detail = db.query(Node).filter_by(node_uid=node_uid).first()
     if not node_detail or node_detail.node_state != 1 or node_detail.expired_at < datetime.datetime.now():
         return send_response({'message': 'Event expired or not found!'})

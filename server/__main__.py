@@ -1,20 +1,15 @@
-import os
+import uvicorn
+from server import ENGINEE, MODEL, SERVER_PORT,app
+# Create tables
+from server import com
+from server import model
+from server.util.logger import UVC_LOGGING_CONFIG
 
-from dotenv import load_dotenv
-from fastapi import FastAPI
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+MODEL.metadata.create_all(bind=ENGINEE)
 
-from server.util.cryptograph import CryptoSecure
-from server.util.quickresponse import GenerateQRC
+app.add_event_handler('startup', lambda: print("API Server Startup"))
+app.add_event_handler('shutdown', lambda: print("API Server Shutdown"))
 
-load_dotenv('config.env')
-app = FastAPI()
-
-cipher = CryptoSecure(os.getenv('SECRET_KEY', 'password'))
-qrc = GenerateQRC(os.getenv('QRC_PATH', 'qrc'))
-# Configure database connection
-Base = declarative_base()
-engine = create_engine(os.getenv('DATABASE_URI'))
-session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
+if __name__ == "__main__":
+    config = uvicorn.Config(app, host="0.0.0.0", port=SERVER_PORT, log_config=UVC_LOGGING_CONFIG, reload=True)
+    uvicorn.Server(config).run()

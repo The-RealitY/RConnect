@@ -1,14 +1,30 @@
 import datetime
+import time
 import uuid
 
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from server.__main__ import app, cipher
+from server import LOGGER, SERVER_UPTIME, app, CIPHER
 from server.com.ext.helper import send_response
 from server.com.ext.validation import Authorize, create_token
 from server.model.node import Ssid
 from server.model.system import System
+
+
+@app.route('/',methods=['GET'])
+async def index(request:Request):
+    LOGGER.info("HAI")
+    return send_response(
+        {
+        "data":[{
+            'upTime':time.time() - SERVER_UPTIME
+        }],
+        'message': "Server was up and runnning!"
+            
+            },
+        200
+    )
 
 
 @app.route('/api/v1/system/signup', methods=['POST'])
@@ -23,7 +39,7 @@ async def system_signup(request: Request):
     system_detail.sys_uid = str(uuid.uuid4()).replace('-', '').upper()[:10]
     system_detail.sys_name = data['sys_name']
     system_detail.sys_username = user_name
-    system_detail.sys_password = cipher.generate_hash(data['sys_password'])
+    system_detail.sys_password = CIPHER.generate_hash(data['sys_password'])
     system_detail.created_at = datetime.datetime.now()
     access_token = create_token(system_detail.sys_uid, Authorize.SYSTEM)
 
@@ -33,7 +49,7 @@ async def system_signup(request: Request):
         ses = Ssid()
         ses.created_at = datetime.datetime.now()
     ses.ssid_uid = system_detail.sys_uid
-    ses.ssid_hash = cipher.generate_hash(access_token)
+    ses.ssid_hash = CIPHER.generate_hash(access_token)
 
     db.add(system_detail)
     db.add(ses)
@@ -58,7 +74,7 @@ async def system_signin(request: Request):
     system_detail = db.query(System).filter_by(sys_username=user_name).first()
     if not system_detail:
         return send_response({'message': 'User Not Exists!'}, 400)
-    if not cipher.verify_hash(password, system_detail.sys_password):
+    if not CIPHER.verify_hash(password, system_detail.sys_password):
         return send_response({'message': 'Wrong Credentials!'}, 400)
 
     access_token = create_token(system_detail.sys_uid, Authorize.SYSTEM)
@@ -66,7 +82,7 @@ async def system_signin(request: Request):
     if not ssid:
         ssid = Ssid()
         ssid.created_at = datetime.datetime.now()
-    ssid.ssid_hash = cipher.generate_hash(access_token)
+    ssid.ssid_hash = CIPHER.generate_hash(access_token)
     ssid.updated_at = datetime.datetime.now()
     db.add(ssid)
     db.commit()

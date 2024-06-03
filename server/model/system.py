@@ -2,10 +2,10 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from sqlalchemy import Column, VARCHAR, TIMESTAMP, INTEGER, ForeignKey, SMALLINT
 from sqlalchemy.orm import relationship
 
-from server.__main__ import Base
+from server import MODEL
 
 
-class System(Base):
+class System(MODEL):
     __tablename__ = "system"
 
     sid = Column(INTEGER(), autoincrement=True, primary_key=True)
@@ -17,7 +17,7 @@ class System(Base):
     updated_at = Column(TIMESTAMP())
 
 
-class Node(Base):
+class Node(MODEL):
     __tablename__ = "node"
 
     nid = Column(INTEGER(), autoincrement=True, primary_key=True)

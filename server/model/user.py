@@ -3,10 +3,10 @@ import datetime
 from sqlalchemy import Column, VARCHAR, TIMESTAMP, INTEGER, ForeignKey
 from sqlalchemy.orm import relationship
 
-from server.__main__ import Base
+from server import MODEL
 
 
-class User(Base):
+class User(MODEL):
     __tablename__ = "user"
 
     uid = Column(INTEGER(), autoincrement=True, primary_key=True)

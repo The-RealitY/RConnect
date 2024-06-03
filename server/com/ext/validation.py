@@ -6,7 +6,7 @@ import jwt
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from server.__main__ import cipher
+from server import CIPHER
 from server.com.ext.helper import send_response
 from server.model.node import Ssid
 
@@ -17,7 +17,7 @@ class Authorize:
 
 
 def create_token(uid, token_type):
-    encoded_user_id = cipher.url_encode(uid)
+    encoded_user_id = CIPHER.url_encode(uid)
     expire_time = datetime.utcnow() + timedelta(days=7)
 
     data = dict(exp=expire_time, user_hash=encoded_user_id, authorized=token_type)
@@ -38,9 +38,9 @@ def token_required(token_type):
 
                 payload = jwt.decode(token, os.getenv('SECRET_KEY', 'password'), algorithms=["HS256"])
 
-                uid: str = cipher.url_decode(payload['user_hash'])
+                uid: str = CIPHER.url_decode(payload['user_hash'])
                 ssid = db.query(Ssid).filter_by(ssid_uid=uid).first()
-                if not ssid or not cipher.verify_hash(token, ssid.ssid_hash):
+                if not ssid or not CIPHER.verify_hash(token, ssid.ssid_hash):
                     return send_response({'message': 'Session expired, login again!'}, 401)
                 if payload['authorized'] != token_type:
                     return send_response({'message': 'Access level unsatisfied!'}, 401)

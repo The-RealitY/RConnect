@@ -2,7 +2,6 @@ import json
 import os
 
 import qrcode
-from uvicorn.config import logger
 
 from server.util.misc import get_mime_type
 

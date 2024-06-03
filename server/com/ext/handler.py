@@ -5,7 +5,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from uvicorn.config import logger
 
-from server.__main__ import app, session
+from server import app, SESSION
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,7 +35,7 @@ async def http_exception_handler(request, exc):
 class ExceptionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         try:
-            request.state.db = session()
+            request.state.db = SESSION()
             response = await call_next(request)
             return response
         except Exception as e:
@@ -60,7 +60,4 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 app.add_middleware(ExceptionMiddleware)
 
 
-# On Event Function
-@app.on_event('shutdown')
-async def on_exit():
-    print("HERE")
+
