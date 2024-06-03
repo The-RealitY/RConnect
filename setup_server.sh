@@ -102,7 +102,7 @@ After=network.target
 Type=simple
 User=ubuntu
 WorkingDirectory=$SCRIPT_DIR
-ExecStart=$SCRIPT_DIR/run.sh
+ExecStart=$SCRIPT_DIR/start_server.sh
 Restart=on-failure
 RestartSec=5
 
