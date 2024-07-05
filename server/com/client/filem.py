@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from server import app
 from server.com.ext.helper import send_response, send_file
-from server.model.system import Node
+from server.model.node import Node
 
 
 def create_thumbnail(ip, file_name, node_uuid, thumbnail_size=(100, 100)):

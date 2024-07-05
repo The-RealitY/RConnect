@@ -14,5 +14,5 @@ class User(MODEL):
     ip_address = Column(VARCHAR())
     joined_at = Column(TIMESTAMP(), onupdate=datetime.datetime.now())
 
-    node_uid = Column(INTEGER(), ForeignKey('node.node_uid', ondelete='CASCADE'))
+    node_uid = Column(VARCHAR(), ForeignKey('node.node_uid', ondelete='CASCADE'))
     node_uid_fk = relationship("Node", foreign_keys=[node_uid])

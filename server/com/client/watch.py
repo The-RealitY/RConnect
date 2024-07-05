@@ -10,7 +10,7 @@ from watchfiles import awatch
 from server import app, SESSION
 from server.com.client.filem import file_baseurl
 from server.com.ext.helper import send_response
-from server.model.system import Node
+from server.model.node import Node
 
 
 @app.websocket('/ws/v1/node/watch')
