@@ -18,6 +18,7 @@ if [ -z "$port" ]; then
 fi
 
 # Kill the running server.
+# shellcheck disable=SC2046
 sudo kill -9 $(lsof -t -i:"$port") 2>/dev/null
 
 

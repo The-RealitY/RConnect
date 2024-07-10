@@ -26,7 +26,8 @@ sudo apt install python3-venv -y
 
 # Kill any running process on port 5000
 echo "=====> Killing process running on port '$port'"
-sudo kill -9 $(lsof -t -i:$port) 2>/dev/null
+# shellcheck disable=SC2046
+sudo kill -9 $(lsof -t -i:"$port") 2>/dev/null
 if [ $? -eq 0 ]; then
     echo "=====> Process on port $port killed."
 else

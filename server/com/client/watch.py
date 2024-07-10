@@ -23,6 +23,6 @@ async def file_connect(websocket: WebSocket):
         await websocket.accept()
         await websocket.send_json({'message': f'Successfully Connected to {node_detail.node_name}'})
         async for _ in aiter(awatch(folder_path)):
-            await websocket.send_json({'message': 'REFRESH'})
+            await websocket.send_json({'message': 'REFRESH_REQUIRED'})
     except asyncio.CancelledError:
         return await websocket.close(reason="Connection lost!", code=503)
