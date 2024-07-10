@@ -42,6 +42,7 @@ async def create_node(request: Request, db: Session, ssid: Ssid):
 
     return send_response({'data': [
         {'node_uid': node_detail.node_uid,
+         'node_name': node_detail.node_name,
          'node_qrc': dl_url(request) + node_detail.node_qrc
          }
     ], 'message': 'Event was created successfully!'
@@ -67,14 +68,14 @@ async def list_nodes(request: Request, db: Session, ssid: Ssid):
         Node.sys_uid == str(ssid.ssid_uid)
     ).all()
 
-    output = NodeSchema().dump(details, many=True)
-    return send_response({'data': output, 'message': 'Data fetched successful'})
+    data = NodeSchema().dump(details, many=True)
+    return send_response({'data': data, 'message': 'Data fetched successful'})
 
 
 @app.route('/api/v1/system/node', methods=['PUT'])
 @token_required(Authorize.SYSTEM)
-async def create_node(request: Request,db:Session, ssid: Ssid):
-    state: int = int(request.query_params.get('state', '0'))
+async def create_node(request: Request, db: Session, ssid: Ssid):
+    state: int = int(request.query_params.get('node_state', '0'))
     node_uid: str = request.query_params.get('node_uid', None)
     node_detail = db.query(Node).filter(and_(
         Node.node_uid == node_uid,

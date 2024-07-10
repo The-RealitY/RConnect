@@ -1,3 +1,5 @@
+import traceback
+
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -40,8 +42,9 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             return response
         except Exception as e:
             request.state.db.rollback()
-
-            logger.error(f"\n<<<---Start of Exception---\n{str(e)}\n---End of Exception--->")
+            # Get the traceback details
+            tb_str = traceback.format_exc()
+            logger.error(f"\n<<<---Start of Exception--- \nTraceback:{tb_str}\n ---End of Exception--->")
             return JSONResponse(
                 status_code=500,
                 content={
@@ -58,6 +61,3 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
 
 app.add_middleware(ExceptionMiddleware)
-
-
-

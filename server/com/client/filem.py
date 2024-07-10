@@ -8,7 +8,7 @@ from PIL import Image
 from fastapi import File, UploadFile, Request
 from sqlalchemy.orm import Session
 
-from server import app
+from server import app, SESSION
 from server.com.ext.helper import send_response, send_file
 from server.model.node import Node
 
@@ -31,6 +31,23 @@ def process_upload(file, folder_path, node_uuid):
         f.write(file_content)
 
     create_thumbnail(img_path, nw_fn, node_uuid)
+
+
+@app.get('/api/v1/node/files')
+async def event_files(request: Request):
+    node_uid: str = request.query_params.get('node_uid')
+    db: Session = SESSION()
+    node_detail = db.query(Node).filter_by(node_uid=node_uid).first()
+    if not node_detail or node_detail.node_state != 1 or node_detail.expired_at < datetime.datetime.now():
+        return send_response({'message': 'Event expired or not found!'})
+
+    folder_path = os.path.join(os.getenv('NODE_PATH', 'Node'), node_detail.node_uid)
+    os.makedirs(folder_path, exist_ok=True)
+    file_list = [{"thumbnail": file_baseurl(request, node_uid, f, 'T'),
+                  "download": file_baseurl(request, node_uid, f, 'F')} for f in
+                 os.listdir(folder_path) if
+                 os.path.isfile(os.path.join(folder_path, f))]
+    return send_response({'data': file_list, 'message': 'Files successfully updated!'}, 200)
 
 
 @app.post("/api/v1/node/upload-file")
@@ -57,7 +74,6 @@ async def upload_file(
 async def download_thumbnail(request: Request):
     node_uid = request.path_params.get('node_uid')
     file = request.path_params.get('file')
-    print(node_uid, file)
     if not os.path.exists((event_folder := os.path.join(os.getenv('NODE_PATH', 'Node'), node_uid))):
         return send_response({'message': 'Event expired or not found!'}, 400)
     if not os.path.exists(os.path.join(file_path := os.path.join(event_folder, '.thumbnail', file))):

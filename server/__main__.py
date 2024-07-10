@@ -1,18 +1,21 @@
+"""
+Author: Humanpredator
+Note: Main file to run the server
+"""
 import os
 import subprocess
 import sys
 
 import uvicorn
+
 from server import ENGINEE, MODEL, SERVER_PORT, app, ALEMBIC_DIR, DB_URI, LOGGER
 # noinspection PyUnresolvedReferences
-from server import com
-# noinspection PyUnresolvedReferences
-from server import model
+from server import model, com
 from server.util.logger import UVC_LOGGING_CONFIG
 
-# Server start and stop event handler
-app.add_event_handler('startup', lambda: print("API Server Startup"))
-app.add_event_handler('shutdown', lambda: print("API Server Shutdown"))
+# Server startup and shutdown handler modify as your need.
+app.add_event_handler('startup', lambda: LOGGER.info("Starting API Server!"))
+app.add_event_handler('shutdown', lambda: LOGGER.info("Shutting API Server!"))
 
 
 # Run DB migrate on every server startup.
@@ -40,7 +43,7 @@ def run_migration():
             file.write(env_content)
 
     LOGGER.info('\n<-------------Running Migration-------------->')
-    subprocess.run([sys.executable, '-m', 'alembic', 'revision', '--autogenerate', '-m', 'Update migration'])
+    subprocess.run([sys.executable, '-m', 'alembic', 'revision', '--autogenerate', '-m', 'Server Startup Migration!'])
     subprocess.run([sys.executable, '-m', 'alembic', 'upgrade', 'head'])
     LOGGER.info('\n<-------------Migration Completed-------------->')
 

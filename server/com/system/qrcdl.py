@@ -6,10 +6,14 @@ from starlette.requests import Request
 from server import app, CIPHER
 from server.com.ext.helper import send_response, send_file
 
-file_download = "/api/v1/file"
+
+def dl_url(request: Request) -> str:
+    base_url = str(request.base_url)
+    download_url = app.url_path_for('qrc_download').lstrip('/')
+    return f"{base_url}{download_url}?content="
 
 
-@app.route(file_download, methods=['GET'])
+@app.route("/api/v1/file", methods=['GET'])
 def qrc_download(request: Request):
     content = request.query_params.get('content', '')
     if not (data_str := CIPHER.decrypt(content)):
@@ -19,9 +23,3 @@ def qrc_download(request: Request):
         file_path = os.path.join(user_dir, file_md['file_name'])
         return send_file(file_path, file_md['legacy_name'])
     return send_response({'message': 'File Not Found!'}, 400)
-
-
-def dl_url(request: Request) -> str:
-    base_url = str(request.base_url)
-    download_url = app.url_path_for('qrc_download').lstrip('/')
-    return f"{base_url}{download_url}?content="

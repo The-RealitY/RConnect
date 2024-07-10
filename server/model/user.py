@@ -10,8 +10,10 @@ class User(MODEL):
     __tablename__ = "user"
 
     uid = Column(INTEGER(), autoincrement=True, primary_key=True)
-    device_id = Column(VARCHAR(), nullable=False)
     ip_address = Column(VARCHAR())
+    device = Column(VARCHAR())
+    platform = Column(VARCHAR())
+    browser = Column(VARCHAR())
     joined_at = Column(TIMESTAMP(), onupdate=datetime.datetime.now())
 
     node_uid = Column(VARCHAR(), ForeignKey('node.node_uid', ondelete='CASCADE'))

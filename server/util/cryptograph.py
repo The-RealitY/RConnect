@@ -31,8 +31,7 @@ class CryptoSecure:
             encryptor = cipher.encryptor()
             ciphertext = encryptor.update(msg.encode('UTF-8')) + encryptor.finalize()
             return urlsafe_b64encode(iv + ciphertext).decode('UTF-8')
-        except Exception as e:
-            print(f"Decryption error: {e}")
+        except Exception:
             return None
 
     def decrypt(self, enc_msg: str):
@@ -44,26 +43,37 @@ class CryptoSecure:
             decrypted = cipher.decryptor()
             dec_msg = decrypted.update(data[16:]) + decrypted.finalize()
             return dec_msg.decode('UTF-8')
-        except Exception as e:
-            print(f"Decryption error: {e}")
+        except Exception:
             return None
 
     @staticmethod
     def generate_hash(password):
-        unq_salt = secrets.token_hex(16)
-        hashed = hashlib.sha256(str(password + unq_salt).encode()).hexdigest()
-        return f"{unq_salt}${hashed}"
+        try:
+            unq_salt = secrets.token_hex(16)
+            hashed = hashlib.sha256(str(password + unq_salt).encode()).hexdigest()
+            return f"{unq_salt}${hashed}"
+        except Exception:
+            return None
 
     @staticmethod
     def verify_hash(password, hash_str):
-        salt, stored_hashed = hash_str.split('$', 1)
-        input_hashed = hashlib.sha256((password + salt).encode()).hexdigest()
-        return input_hashed == stored_hashed
+        try:
+            salt, stored_hashed = hash_str.split('$', 1)
+            input_hashed = hashlib.sha256((password + salt).encode()).hexdigest()
+            return input_hashed == stored_hashed
+        except Exception:
+            return None
 
     @staticmethod
-    def url_encode(string) -> str:
-        return base64.b64encode(str(string).encode()).decode()
+    def url_encode(string) -> str | None:
+        try:
+            return base64.b64encode(str(string).encode()).decode()
+        except Exception:
+            return None
 
     @staticmethod
-    def url_decode(string) -> str:
-        return base64.b64decode(string).decode()
+    def url_decode(string) -> str | None:
+        try:
+            return base64.b64decode(string).decode()
+        except Exception:
+            return None
