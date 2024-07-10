@@ -4,6 +4,7 @@ Note: Initialization file where all configuration from config.env file will be l
 """
 import logging
 import os
+import sys
 import time
 
 from dotenv import load_dotenv
@@ -14,7 +15,11 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 from server.util.cryptograph import CryptoSecure
 from server.util.quickresponse import GenerateQRC
 
+SERVER_UPTIME = time.time()
 # Load the config from config.env
+if not os.path.exists('config.env'):
+    print("config.env file doesn't exist on the directory, please refer the README to set up configuration, existing!")
+    sys.exit(1)
 load_dotenv('config.env')
 app = FastAPI()
 
@@ -28,7 +33,6 @@ SESSION = sessionmaker(autocommit=False, autoflush=False, bind=ENGINEE)
 CIPHER = CryptoSecure(os.getenv('SECRET_KEY', 'password'))
 QRCG = GenerateQRC(os.getenv('QRC_PATH', 'qrc'))
 SERVER_PORT = int(os.getenv('PORT', '8000'))
-SERVER_UPTIME = time.time()
 LOGGER = logging.getLogger(__name__)
 ALEMBIC_DIR = 'alembic'
 
