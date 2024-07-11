@@ -11,6 +11,5 @@ services:
       - "5000:5000"
     volumes:
       - ./qrc:/app/qrc
-      - ./config.env:/app/config.env
       - ./Node:/app/Node
-      - ./rconnect.db:/app/rconnect.db
+      - ./config.env:/app/config.env
