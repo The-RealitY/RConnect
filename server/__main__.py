@@ -49,7 +49,7 @@ def run_migration():
 
 
 if __name__ == "__main__":
-    run_migration()
     MODEL.metadata.create_all(bind=ENGINEE)
+    run_migration()
     config = uvicorn.Config(app, host="0.0.0.0", port=SERVER_PORT, log_config=UVC_LOGGING_CONFIG)
     uvicorn.Server(config).run()
