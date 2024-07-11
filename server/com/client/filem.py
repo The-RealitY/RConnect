@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from server import app, SESSION
 from server.com.ext.helper import send_response, send_file
 from server.model.node import Node
+from server.util.misc import remove_metadata
 
 
 def create_thumbnail(ip, file_name, node_uuid, thumbnail_size=(100, 100)):
@@ -28,7 +29,8 @@ def process_upload(file, folder_path, node_uuid):
     file.file.seek(0)
     with open(img_path, "wb") as f:
         file_content = file.file.read()
-        f.write(file_content)
+        file_br = remove_metadata(file_content)
+        f.write(file_br)
 
     create_thumbnail(img_path, nw_fn, node_uuid)
 

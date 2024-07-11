@@ -1,5 +1,6 @@
 import traceback
 
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -9,6 +10,7 @@ from uvicorn.config import logger
 
 from server import app, SESSION
 
+# Allow All Origin Request
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*,"],  # Allow all origins, replace with specific domains in production
@@ -28,12 +30,30 @@ async def http_exception_handler(request, exc):
             "message": (
                 f"Failed Endpoint: {request.url}\n"
                 f"Failed Method: {request.method}\n"
-                f"Failed Reason {str(exc.detail).strip()!r}"
+                f"Failed Reason: {str(exc.detail).strip()!r}"
             )
         },
     )
 
 
+# Request Validation Error
+@app.exception_handler(RequestValidationError)
+async def exception_handler(request, exc: RequestValidationError):
+    list(map(lambda i: i.pop('url', None), exc.errors()))
+    return JSONResponse(
+        status_code=400,
+        content={
+            "data": [],
+            "message": (
+                f"Failed Endpoint: {request.url}\n"
+                f"Failed Method: {request.method}\n"
+                f"Failed Reason: {exc.errors()!r}"
+            )
+        },
+    )
+
+
+# Add Custom Middleware
 class ExceptionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         try:
@@ -52,7 +72,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
                     "message": (
                         f"Failed Endpoint: {request.url} \n"
                         f"Failed Method: {request.method} \n"
-                        f"Failed Reason {str(e).strip()!r}"
+                        f"Failed Reason: {str(e).strip()!r}"
                     )
                 },
             )

@@ -2,6 +2,11 @@ import mimetypes
 
 from starlette.requests import Request
 from user_agents import parse
+from PIL import Image
+import os
+import uuid
+from pathlib import Path
+from io import BytesIO
 
 
 def get_mime_type(file_path):
@@ -31,3 +36,13 @@ def requestor_metadata(request: Request):
         "os_name": os_name,
         "browser_name": browser_name
     }
+
+
+def remove_metadata(image_data):
+    with Image.open(BytesIO(image_data)) as img:
+        data = img.getdata()
+        img_no_metadata = Image.new(img.mode, img.size)
+        img_no_metadata.putdata(data)
+        output = BytesIO()
+        img_no_metadata.save(output, format=img.format, quality='keep', optimize=True)
+        return output.getvalue()
