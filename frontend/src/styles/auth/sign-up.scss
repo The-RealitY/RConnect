@@ -1,0 +1,126 @@
+$primary-bg-color: #76b852;
+$gradient-start: #f5f7fa;
+$gradient-end: #c3cfe2;
+$form-bg-color: #FFFFFF;
+$form-shadow-color: rgba(0, 0, 0, 0.2);
+$form-shadow-hover-color: rgba(0, 0, 0, 0.24);
+$form-button-bg-color: #4CAF50;
+$form-button-hover-bg-color: #43A047;
+$form-message-color: #b3b3b3;
+$form-input-bg-color: #f2f2f2;
+$form-input-font-size: 14px;
+$info-color: #1a1a1a;
+$info-secondary-color: #4d4d4d;
+$info-font-size: 36px;
+$info-secondary-font-size: 12px;
+
+body {
+  background: $primary-bg-color; /* fallback for old browsers */
+  background: linear-gradient(135deg, $gradient-start 0%, $gradient-end 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+}
+
+.form {
+  position: relative;
+  z-index: 1;
+  background: $form-bg-color;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 $form-shadow-color, 0 5px 5px 0 $form-shadow-hover-color;
+
+  input {
+    outline: 0;
+    background: $form-input-bg-color;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: $form-input-font-size;
+  }
+
+  .input-utils{
+    margin: 0 0 15px;
+  }
+
+  button {
+    text-transform: uppercase;
+    outline: 0;
+    background: $form-button-bg-color;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: $form-input-font-size;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: $form-button-hover-bg-color;
+    }
+  }
+
+  .message {
+    margin: 15px 0 0;
+    color: $form-message-color;
+    font-size: 12px;
+
+    a {
+      color: $form-button-bg-color;
+      text-decoration: none;
+    }
+  }
+
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+
+  &:before,
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+  .info {
+    margin: 50px auto;
+    text-align: center;
+
+    h1 {
+      margin: 0 0 15px;
+      padding: 0;
+      font-size: $info-font-size;
+      font-weight: 300;
+      color: $info-color;
+    }
+
+    span {
+      color: $info-secondary-color;
+      font-size: $info-secondary-font-size;
+
+      a {
+        color: #000000;
+        text-decoration: none;
+      }
+
+      .fa {
+        color: #EF3B3A;
+      }
+    }
+  }
+}

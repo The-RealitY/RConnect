@@ -1,7 +1,9 @@
+import { toast } from 'react-toastify';
+
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || 'API request failed');
+    toast.error(errorData.message);
   }
   return response.json();
 };

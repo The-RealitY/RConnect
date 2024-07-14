@@ -55,7 +55,7 @@ python -m venv venv
 - Activate the venv:
 
 ``` commandline
-venv\Scripts\Active
+venv\Scripts\activate
 ```
 
 - Install the requirement packages:

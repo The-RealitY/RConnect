@@ -1,7 +1,6 @@
 import traceback
 
 from fastapi.exceptions import RequestValidationError
-from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -9,16 +8,6 @@ from starlette.responses import JSONResponse
 from uvicorn.config import logger
 
 from server import app, SESSION
-
-# Allow All Origin Request
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*,"],  # Allow all origins, replace with specific domains in production
-    allow_credentials=True,
-    allow_methods=["*,"],  # Allow all methods (GET, POST, etc.)
-    allow_headers=["*,"]  # Allow all headers
-)
-
 
 # Http Error Code handler
 @app.exception_handler(HTTPException)

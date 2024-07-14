@@ -14,6 +14,8 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from server.util.cryptograph import CryptoSecure
 from server.util.quickresponse import GenerateQRC
+from fastapi.middleware.cors import CORSMiddleware
+
 
 SERVER_UPTIME = time.time()
 # Load the config from config.env
@@ -22,6 +24,15 @@ if not os.path.exists('config.env'):
     sys.exit(1)
 load_dotenv('config.env')
 app = FastAPI()
+
+# Allow All Origin Request
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"], 
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["http://localhost:3000"],  
+)
 
 # Create DB con and session
 MODEL = declarative_base()

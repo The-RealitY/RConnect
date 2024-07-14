@@ -42,3 +42,5 @@ test-results/
 
 # Miscellaneous
 *.log
+
+package-lock.json

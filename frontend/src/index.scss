@@ -1,0 +1,28 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+body {
+  background-color: #f5f6fa;
+  margin: 0;
+  font-family: 'Quicksand', Arial, sans-serif !important;
+  font-size: 100%;
+  font-weight: 500;
+  height: 100vh;
+}
+
+.error-msg {
+  text-align: start;
+  color: red;
+  font-size: small;
+}
