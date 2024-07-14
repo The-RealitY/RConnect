@@ -1,0 +1,44 @@
+# Node modules
+node_modules/
+
+# Compiled files
+build/
+dist/
+
+# Logs
+npm-debug.log*
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependency directories
+.pnp/
+.pnp.js
+
+# Yarn
+yarn-error.log
+yarn.lock
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Jest test results
+test-results/
+
+# Miscellaneous
+*.log
