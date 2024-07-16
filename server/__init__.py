@@ -21,7 +21,7 @@ if not os.path.exists('config.env'):
     print("config.env file doesn't exist on the directory, please refer the README to set up configuration, existing!")
     sys.exit(1)
 load_dotenv('config.env')
-app = FastAPI()
+app = FastAPI(docs_url=None)
 
 # Create DB con and session
 MODEL = declarative_base()

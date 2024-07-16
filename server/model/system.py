@@ -23,13 +23,13 @@ class System(MODEL):
 class Ssid(MODEL):
     __tablename__ = "ssid"
     id = Column(INTEGER(), autoincrement=True, primary_key=True)
-    ssid_uid = Column(VARCHAR(), nullable=False)
-    ssid_hash = Column(VARCHAR(), nullable=False, unique=True)
-    ssid_ip = Column(VARCHAR())
-    ssid_device = Column(VARCHAR())
-    ssid_platform = Column(VARCHAR())
-    ssid_browser = Column(VARCHAR())
-    ssid_status = Column(VARCHAR(), default=1)
+    ssid_uid = Column(VARCHAR(15), nullable=False)
+    ssid_hash = Column(VARCHAR(500), nullable=False, unique=True)
+    ssid_ip = Column(VARCHAR(100))
+    ssid_device = Column(VARCHAR(100))
+    ssid_platform = Column(VARCHAR(100))
+    ssid_browser = Column(VARCHAR(100))
+    ssid_state = Column(SMALLINT(), default=1)
     created_at = Column(TIMESTAMP(), default=datetime.now())
     updated_at = Column(TIMESTAMP(), onupdate=datetime.now())
 
