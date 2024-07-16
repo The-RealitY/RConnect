@@ -23,12 +23,6 @@ def run_migration():
     # Initialize Alembic if it hasn't been initialized
     if not os.path.exists(ALEMBIC_DIR):
         subprocess.run(['alembic', 'init', ALEMBIC_DIR])
-        # Configure alembic.ini
-        with open('alembic.ini', 'r') as file:
-            nw_config = file.read()
-        nw_config = nw_config.replace('driver://user:pass@localhost/dbname', DB_URI)
-        with open('alembic.ini', 'w') as file:
-            file.write(nw_config)
         # Update alembic/env.py to import models and set target_metadata
         env_path = os.path.join(ALEMBIC_DIR, 'env.py')
         with open(env_path, 'r') as file:
@@ -41,6 +35,13 @@ def run_migration():
         )
         with open(env_path, 'w') as file:
             file.write(env_content)
+
+    # Configure alembic.ini
+    with open('alembic.ini', 'r') as file:
+        nw_config = file.read()
+    nw_config = nw_config.replace('driver://user:pass@localhost/dbname', DB_URI)
+    with open('alembic.ini', 'w') as file:
+        file.write(nw_config)
 
     LOGGER.info('\n<-------------Running Migration-------------->')
     subprocess.run([sys.executable, '-m', 'alembic', 'revision', '--autogenerate', '-m', 'Server Startup Migration!'])
