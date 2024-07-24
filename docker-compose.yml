@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  rtc-postgres:
+  rtc-db:
     image: postgres:latest
     container_name: RTC-IbDB
     environment:
@@ -12,12 +12,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  rtc:
+  rtc-server:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: RTC-Server
-    image: rtc
+    image: rtc-server
     ports:
       - "5000:5000"
     volumes:
@@ -27,7 +27,7 @@ services:
     env_file:
       config.env
     depends_on:
-      - postgres
+      - rtc-db
 
 volumes:
   postgres_data:
