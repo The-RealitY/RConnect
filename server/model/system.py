@@ -10,7 +10,7 @@ class System(MODEL):
     __tablename__ = "system"
 
     sid = Column(INTEGER(), autoincrement=True, primary_key=True)
-    sys_uid = Column(VARCHAR(15), nullable=False, unique=True)
+    sys_uid = Column(VARCHAR(20), nullable=False, unique=True)
     sys_name = Column(VARCHAR(100), nullable=False)
     sys_username = Column(VARCHAR(12), nullable=False, unique=True)
     sys_email = Column(VARCHAR(100), nullable=False, unique=True)
@@ -23,7 +23,7 @@ class System(MODEL):
 class Ssid(MODEL):
     __tablename__ = "ssid"
     id = Column(INTEGER(), autoincrement=True, primary_key=True)
-    ssid_uid = Column(VARCHAR(15), nullable=False)
+    ssid_uid = Column(VARCHAR(20), nullable=False)
     ssid_hash = Column(VARCHAR(500), nullable=False, unique=True)
     ssid_ip = Column(VARCHAR(100))
     ssid_device = Column(VARCHAR(100))

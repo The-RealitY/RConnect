@@ -1,6 +1,17 @@
 version: '3.9'
 
 services:
+  rtc-postgres:
+    image: postgres:latest
+    container_name: RTC-IbDB
+    environment:
+      POSTGRES_DB: connect
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   rtc:
     build:
       context: .
@@ -13,3 +24,10 @@ services:
       - ./qrc:/app/qrc
       - ./Node:/app/Node
       - ./config.env:/app/config.env
+    env_file:
+      config.env
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

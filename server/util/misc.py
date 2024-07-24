@@ -1,12 +1,9 @@
 import mimetypes
+from io import BytesIO
 
+from PIL import Image
 from starlette.requests import Request
 from user_agents import parse
-from PIL import Image
-import os
-import uuid
-from pathlib import Path
-from io import BytesIO
 
 
 def get_mime_type(file_path):

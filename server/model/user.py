@@ -16,5 +16,5 @@ class User(MODEL):
     browser = Column(VARCHAR(100))
     joined_at = Column(TIMESTAMP(), onupdate=datetime.datetime.now())
 
-    node_uid = Column(VARCHAR(15), ForeignKey('node.node_uid', ondelete='CASCADE'))
+    node_uid = Column(VARCHAR(20), ForeignKey('node.node_uid', ondelete='CASCADE'))
     node_uid_fk = relationship("Node", foreign_keys=[node_uid])

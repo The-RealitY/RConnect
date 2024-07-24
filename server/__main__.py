@@ -5,10 +5,11 @@ Note: Main file to run the server
 import os
 import subprocess
 import sys
-
+import re
 import uvicorn
+from sqlalchemy import text
 
-from server import ENGINEE, MODEL, SERVER_PORT, app, ALEMBIC_DIR, DB_URI, LOGGER
+from server import ENGINEE, MODEL, SERVER_PORT, app, ALEMBIC_DIR, DB_URI, LOGGER, SESSION
 # noinspection PyUnresolvedReferences
 from server import model, com
 from server.util.logger import UVC_LOGGING_CONFIG
@@ -38,13 +39,20 @@ def run_migration():
 
     # Configure alembic.ini
     with open('alembic.ini', 'r') as file:
-        nw_config = file.read()
-    nw_config = nw_config.replace('driver://user:pass@localhost/dbname', DB_URI)
+        old_config = file.read()
+    nw_config = re.sub(
+        r'^sqlalchemy\.url\s*=\s*.*$',  # Pattern to match the sqlalchemy.url line
+        f'sqlalchemy.url = {DB_URI}',  # Replacement line
+        old_config,  # Content to search
+        flags=re.MULTILINE  # Make sure the pattern matches line by line
+    )
     with open('alembic.ini', 'w') as file:
         file.write(nw_config)
-
+    with SESSION() as session:
+        session.execute(text("DROP TABLE IF EXISTS alembic_version;"))
+        session.commit()
     LOGGER.info('\n<-------------Running Migration-------------->')
-    subprocess.run([sys.executable, '-m', 'alembic', 'revision', '--autogenerate', '-m', 'Server Startup Migration!'])
+    subprocess.run([sys.executable, '-m', 'alembic', 'revision', '--autogenerate', '-m', 'Startup Migration!'])
     subprocess.run([sys.executable, '-m', 'alembic', 'upgrade', 'head'])
     LOGGER.info('\n<-------------Migration Completed-------------->')
 
