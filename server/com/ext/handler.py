@@ -6,17 +6,18 @@ from starlette.exceptions import HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-from uvicorn.config import logger
 
-from server import app, SESSION
+from server import app, SESSION, LOGGER
 
-# Allow All Origin Request
+# Allow all origins
+origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*,"],  # Allow all origins, replace with specific domains in production
+    allow_origins=origins,  # Allow all origins
     allow_credentials=True,
-    allow_methods=["*,"],  # Allow all methods (GET, POST, etc.)
-    allow_headers=["*,"]  # Allow all headers
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
 
@@ -64,7 +65,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             request.state.db.rollback()
             # Get the traceback details
             tb_str = traceback.format_exc()
-            logger.error(f"\n<<<---Start of Exception--- \nTraceback:{tb_str}\n ---End of Exception--->")
+            LOGGER.error(f"\n<<<---Start of Exception--- \nTraceback:{tb_str}\n ---End of Exception--->")
             return JSONResponse(
                 status_code=500,
                 content={

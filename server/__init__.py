@@ -23,6 +23,8 @@ if not os.path.exists('config.env'):
 load_dotenv('config.env')
 app = FastAPI(docs_url=None)
 
+
+
 # Create DB con and session
 MODEL = declarative_base()
 DB_URI = os.getenv('DATABASE_URI')
